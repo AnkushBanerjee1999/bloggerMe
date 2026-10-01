@@ -1,65 +1,70 @@
 # bloggerMe — Full-Stack MERN Blog Platform
 
-> A production-style, TypeScript-powered blogging platform built with React, Node.js, Express, MongoDB, Socket.io, and JWT authentication.
+bloggerMe is a full-stack blogging platform built with React, TypeScript, Node.js, Express, MongoDB, and Socket.io.
+
+The application supports public blog browsing, authenticated publishing, discussions, role-based administration, social OAuth 2.0 authentication, and real-time notifications.
 
 ---
 
 ## 1. Overview
 
-**bloggerMe** is a full-featured, secure, and performant content publishing platform designed with clean architectural boundaries. It delivers a modern developer and user experience with robust role-based access control, real-time event updates, resilient token management, social OAuth 2.0 authentication, and a clean administrative suite.
+bloggerMe is designed with clean architectural separation between client, presentation, service, and data layers. It provides readers with a responsive reading and search experience, authors with content management tools, and administrators with moderation and governance controls.
 
-### Key Highlights
-- **Audience & Use Cases**: Authors and readers looking for a responsive publishing platform with rich Markdown styling, personal management dashboards, comment threads, and administrative oversight.
-- **Main User Flows**: Readers can browse published posts, search by keyword/tag, read articles, and participate in discussion threads. Registered authors can publish, edit, draft, and soft-delete their own posts and manage comments.
-- **Admin Capabilities**: Dedicated administrative console providing user directory management, role upgrades/downgrades, account suspension (ban/unban), post moderation, and comment visibility toggling (`visible` / `hidden`).
-- **Real-Time Experience**: Socket.io integration delivering instantaneous notifications directly to targeted user rooms for comments, status changes, and role assignments without polling.
-- **Security-First Architecture**: Dual-token JWT (access & refresh) with database-backed revocation, bcrypt password hashing, Joi validation schemas with unknown property stripping, Helmet protection, strict CORS, and centralized error sanitization.
+### Key Features
+- **Public Blog Browsing & Search**: Search articles by keyword or tag, filter by popularity or chronology, and browse paginated listings.
+- **User Authentication**: Email/password authentication, JWT access/refresh token rotation, and Google/Facebook OAuth 2.0.
+- **Post Lifecycle**: Create, edit, draft, and soft-delete posts with automatic slug generation and conflict resolution.
+- **Comments & Moderation**: Discussion threads on posts with moderation status controls (`visible` / `hidden`).
+- **Role-Based Administration**: Dedicated administrative panel for managing user accounts, roles, post content, and comment visibility.
+- **Real-Time Notifications**: Instant event delivery via Socket.io to personal user rooms for comments, status changes, and role assignments.
+- **Database Optimization**: Targeted indexes on MongoDB collections and capped pagination limits to ensure query efficiency.
+- **Automated Test Coverage**: Comprehensive backend unit and integration test suites alongside frontend component tests.
 
 ---
 
 ## 2. Features
 
 ### Authentication & Sessions
-- **Email & Password Registration**: Clean registration with client & server validation; automatically assigns default `'user'` role with zero privilege escalation attack surface.
-- **Dual-Token JWT Authentication**: Short-lived access tokens (15m) and long-lived refresh tokens (7d).
-- **Token Invalidation & Revocation**: Instant revocation of all issued refresh tokens on logout via atomic `tokenVersion` increments in MongoDB.
-- **OAuth 2.0 Integration**: Native Google and Facebook social login flows that securely map external identities to local database accounts and issue standard application JWTs.
-- **Rate Limiting**: IP-based rate limiting on sensitive authentication routes (`20` requests per 15 minutes) and API endpoints (`100` requests per 15 minutes) via `express-rate-limit`.
+- **Registration & Login**: Secure account creation and credential validation. Public registration automatically assigns the `user` role and ignores any client-supplied role values.
+- **Dual-Token JWT Strategy**: Short-lived access tokens (15m) for API authentication and longer-lived refresh tokens (7d) for token renewals.
+- **Refresh Token Invalidation**: Atomic `tokenVersion` increments on logout to immediately invalidate existing refresh tokens.
+- **OAuth 2.0 Integration**: Native Google and Facebook social login flows that map external profiles to local database accounts and issue standard application JWTs.
+- **Rate Limiting**: Request rate limiting on sensitive authentication routes (`20` requests per 15 minutes) and API endpoints (`100` requests per 15 minutes) using `express-rate-limit`.
 
-### Authorization & RBAC
-- **Strict Role-Based Access Control**:
-  - `user`: Create, update, soft-delete own posts and comments; manage personal profile.
-  - `admin`: Platform-wide access to all posts, moderation over comments, user management, and analytics.
-- **Resource Ownership Verification**: Verified server-side via authenticated token payload (`req.user.id`). Client-supplied user identities are never trusted.
-- **Backend Boundary**: Frontend route guards provide clean navigation UX, while server-side middleware (`authenticate`, `requireRole`, `requireAdmin`) guarantees impenetrable authorization boundaries.
+### Authorization & Roles
+- **Role-Based Access Control (RBAC)**:
+  - `user`: Can create posts, edit or delete owned posts, post comments, edit or delete owned comments, and manage profile settings.
+  - `admin`: Full platform access, including managing any post, moderating comments, listing users, updating user roles, and viewing analytics.
+- **Ownership Verification**: Resource modification endpoints verify author ownership server-side using the verified JWT identity (`req.user.id`).
+- **Server-Side Enforcement**: While client-side route guards improve navigation UX, all authorization checks are strictly enforced by backend middleware (`authenticate`, `requireRole`, `requireAdmin`).
 
 ### Blog Posts
-- **Full CRUD Lifecycle**: Create, view, update, and soft-delete posts with rich content, excerpts, tags, and cover images.
-- **Clean URL Slugs**: Automatic kebab-case slug generation with collision detection and sequential suffix resolution (`post-title-1`, `post-title-2`).
-- **Soft Deletion Pattern**: Deleted posts retain referential integrity with `deletedAt` timestamps and are automatically filtered out from public queries via Mongoose query middleware.
-- **Admin Overrides**: Administrators can edit or delete any post to enforce platform standards.
-- **Pagination & Sorting**: Paginated listing supporting `newest`, `oldest`, and `popular` (by views) with capped maximum limits.
+- **CRUD Operations**: Create, read, update, and soft-delete blog posts with title, excerpt, markdown content, tags, and cover image.
+- **Slug Generation**: Automatic kebab-case slug generation with collision detection and numeric suffixing (`post-title-1`, `post-title-2`).
+- **Soft Deletion**: Posts marked as deleted retain referential integrity via `deletedAt` timestamps and are automatically excluded from public queries using Mongoose query middleware.
+- **Admin Overrides**: Administrators can update or remove any post to maintain platform standards.
+- **Pagination & Sorting**: Post listings support pagination with configurable sorting (`newest`, `oldest`, `popular`).
 
 ### Comments & Moderation
-- **Post Discussion Threads**: Authenticated users can leave comments on any published post.
-- **Author Ownership**: Commenters can edit or delete their own comments.
-- **Admin Moderation**: Administrators can toggle comment visibility (`visible` / `hidden`) across all posts.
-- **Real-Time Notification Delivery**: Socket.io alerts the post author immediately when a new comment is posted (skipping self-notifications) and notifies comment authors when moderation status changes.
+- **Discussion Threads**: Authenticated readers can post comments on any published article.
+- **Author Ownership**: Comment authors can edit or soft-delete their own contributions.
+- **Admin Moderation**: Administrators can toggle comment visibility between `visible` and `hidden`.
+- **Real-Time Notification Delivery**: Socket.io alerts the post author when a new comment is posted (skipping self-comments) and notifies comment authors when moderation status changes.
 
 ### Admin Panel
-- **Analytics & Platform Stats**: Global statistics including total registered users, published posts, drafts, and comments.
-- **User Management**: Paginated user directory with search by name/email, account ban/unban toggling, and role modification (`user` ↔ `admin`).
-- **Centralized Moderation**: Administrative comment browser to inspect, hide, or restore discussions platform-wide.
+- **System Metrics**: Platform-wide statistics on total users, published articles, drafts, and comments.
+- **User Directory**: Paginated user listing with search by name/email, account ban/unban toggling, and role modification (`user` ↔ `admin`).
+- **Comment Moderation View**: Centralized interface to browse, inspect, and moderate discussion threads across all articles.
 
 ### Real-Time Notifications (Socket.io)
-- **Unified Server**: Attached directly to the existing HTTP server instance (`http.createServer(app)`).
-- **Handshake Authentication**: Mandatory JWT verification on socket connection via `auth: { token }` or headers.
-- **Personal User Rooms**: Authenticated sockets are automatically joined to isolated rooms (`user:{userId}`).
-- **Event Types Supported**:
-  - `NEW_COMMENT`: Delivered to the post author when a reader comments.
-  - `COMMENT_STATUS_CHANGED`: Delivered to the comment author when an admin changes comment status.
-  - `ROLE_CHANGED`: Delivered to the user when their account role is updated by an admin.
-- **Frontend Reactive UI**: Interactive notification bell in public, user, and admin headers with real-time badges, dropdown panels, mark-as-read state, and instant navigation.
+- **Unified Server Setup**: Socket.io attaches directly to the HTTP server instance (`http.createServer(app)`).
+- **Socket Authentication**: JWT verification on connection handshake via `auth: { token }` or headers.
+- **Personal User Rooms**: Authenticated sockets automatically join isolated personal rooms (`user:{userId}`).
+- **Supported Notification Events**:
+  - `NEW_COMMENT`: Delivered to the post author when a new comment is submitted.
+  - `COMMENT_STATUS_CHANGED`: Delivered to the comment author when an administrator moderates comment status.
+  - `ROLE_CHANGED`: Delivered to the target user when their account role is updated by an administrator.
+- **Notification UI**: Interactive bell icon in navigation bars with unread badge counter, dropdown panel, mark-as-read toggling, and direct resource navigation.
 
 ---
 
@@ -67,22 +72,22 @@
 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Frontend Framework** | React 18 + TypeScript | Component-based, fully typed user interface |
-| **Frontend Tooling** | Vite 5 | Fast development server and production bundler |
+| **Frontend Framework** | React 18 + TypeScript | Typed component-based user interface |
+| **Frontend Tooling** | Vite 5 | Development server and production bundling |
 | **Routing** | React Router v6 | Client-side routing and protected layout guards |
-| **Icons & Styling** | Lucide React + Tailwind CSS | Iconography and responsive styling |
+| **Styling & UI** | Tailwind CSS + Lucide React | Responsive layout styling and iconography |
 | **Real-Time Client** | Socket.io Client (v4.8) | WebSocket connection with fallback transports |
-| **Backend Runtime** | Node.js (ESM) + TypeScript | Modern JavaScript backend environment |
-| **Web Framework** | Express 4 | RESTful API server with routing middleware |
-| **Real-Time Server** | Socket.io (v4.8) | Real-time event gateway and room isolation |
-| **Database & ODM** | MongoDB + Mongoose 8 | Document database with schema enforcement and indexes |
+| **Backend Runtime** | Node.js (ESM) + TypeScript | Server runtime environment |
+| **Web Framework** | Express 4 | RESTful API routing and middleware pipeline |
+| **Real-Time Server** | Socket.io (v4.8) | WebSocket event gateway and room management |
+| **Database & ODM** | MongoDB + Mongoose 8 | Document database with schema validation and indexes |
 | **Authentication** | JWT (`jsonwebtoken`) | Stateless access and refresh tokens |
 | **Password Hashing** | `bcryptjs` | Salted password hashing (10 rounds) |
 | **Validation** | Joi | Input schema validation with unknown field stripping |
-| **Security & Headers** | Helmet, CORS, Cookie-Parser | HTTP header hardening and origin protection |
-| **Compression & Rate Limiting** | `compression`, `express-rate-limit` | Response gzip compression and IP request limiting |
+| **Security & Headers** | Helmet, CORS, Cookie-Parser | HTTP header hardening and origin verification |
+| **Compression & Rate Limiting** | `compression`, `express-rate-limit` | Gzip compression and IP rate limiting |
 | **Backend Testing** | Jest + Supertest + `ts-jest` | Unit and integration test runners |
-| **Frontend Testing** | Vitest + Testing Library + JSDOM | Component unit and form validation tests |
+| **Frontend Testing** | Vitest + Testing Library + JSDOM | Component unit and form behavior tests |
 
 ---
 
@@ -92,7 +97,7 @@
 
 ```text
 mern-blog/
-├── package.json                   # Workspace scripts for dev, build, test, and seed
+├── package.json                   # Workspace scripts for development, testing, and builds
 ├── frontend/                      # React + TypeScript client application
 │   ├── src/
 │   │   ├── components/            # Reusable UI components (Avatar, Button, Card, Toast, notifications)
@@ -102,27 +107,27 @@ mern-blog/
 │   │   │   ├── admin/             # Admin console views (Dashboard, Users, Posts, Comments)
 │   │   │   ├── public/            # Public views (HomePage, BlogListPage, PostDetailPage, LoginPage, RegisterPage)
 │   │   │   └── user/              # Author views (Dashboard, MyPosts, CreatePost, EditPost, Profile)
-│   │   ├── services/              # Singleton socket manager (socket.ts)
+│   │   ├── services/              # Socket client manager (socket.ts)
 │   │   ├── test/                  # Frontend test suites (auth.test.tsx, setup.ts)
-│   │   ├── types/                 # Shared frontend TypeScript interfaces
-│   │   └── utils/                 # Axios-like fetch API wrapper and token storage
+│   │   ├── types/                 # Shared TypeScript interfaces
+│   │   └── utils/                 # Fetch API wrapper and token storage
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── vite.config.ts
 │
 └── backend/                       # Express + TypeScript server application
     ├── src/
-    │   ├── config/                # Environment variable parsing and defaults
-    │   ├── controllers/           # HTTP request/response handlers
+    │   ├── config/                # Environment configuration and defaults
+    │   ├── controllers/           # HTTP request handlers
     │   ├── middleware/            # Auth, RBAC, validation, rate limiting, error handling
     │   ├── models/                # Mongoose schemas (User, Post, Comment)
     │   ├── routes/                # Express router definitions (/api/v1/*)
-    │   ├── scripts/               # Admin seeding and demo content generators
-    │   ├── services/              # Pure business logic and database operations
-    │   ├── socket/                # Socket.io auth, handlers, emitter, and room logic
-    │   ├── utils/                 # JWT sign/verify, API response wrappers, slug generator, AppError
+    │   ├── scripts/               # Admin seed and sample data scripts
+    │   ├── services/              # Business logic and database operations
+    │   ├── socket/                # Socket.io auth, handlers, and notification emitter
+    │   ├── utils/                 # JWT utilities, API response formatters, slug generator
     │   ├── validators/            # Joi validation schemas
-    │   ├── app.ts                 # Express application setup
+    │   ├── app.ts                 # Express application configuration
     │   └── server.ts              # Unified HTTP + Socket.io server bootstrap
     ├── tests/
     │   ├── integration/           # Supertest API and Socket.io integration tests
@@ -156,7 +161,7 @@ Route-Level Middleware
 Controller Layer (extracts parameters, invokes service, formats response)
       │
       ▼
-Service Layer (business rules, permission validation, persistence)
+Service Layer (business rules, ownership checks, persistence)
       │
       ├── Mongoose Models ──► MongoDB
       └── Socket Notification Emitter ──► Socket.io (`user:{userId}`)
@@ -165,7 +170,7 @@ Service Layer (business rules, permission validation, persistence)
 Consistent JSON Response (`sendSuccess` / `sendPaginated`)
       │
       ▼ (on error)
-Centralized Error Handler (`errorHandler` strips internals in production)
+Centralized Error Handler (`errorHandler` formats response and masks internal errors)
 ```
 
 ---
@@ -173,17 +178,17 @@ Centralized Error Handler (`errorHandler` strips internals in production)
 ## 5. Authentication Flow
 
 ### Local Email & Password Flow
-1. **Registration / Login**: Client sends credentials to `POST /api/v1/auth/register` or `POST /api/v1/auth/login`.
-2. **Verification & Hashing**: Passwords are verified using `bcrypt.compare()` against salt-hashed database entries.
-3. **Token Issuance**: The server generates:
-   - **Access Token**: Signed with `JWT_ACCESS_SECRET` (expires in 15 minutes), containing `{ userId, role }`.
-   - **Refresh Token**: Signed with `JWT_REFRESH_SECRET` (expires in 7 days), containing `{ userId, role, tokenVersion }`.
-4. **Subsequent API Requests**: The client provides the access token via the HTTP header:
+1. **Registration / Login**: The client submits credentials to `POST /api/v1/auth/register` or `POST /api/v1/auth/login`.
+2. **Password Verification**: Passwords are compared using `bcrypt.compare()` against the stored hash.
+3. **Token Issuance**: The server returns:
+   - **Access Token**: Signed with `JWT_ACCESS_SECRET` (15-minute expiration), containing `{ userId, role }`.
+   - **Refresh Token**: Signed with `JWT_REFRESH_SECRET` (7-day expiration), containing `{ userId, role, tokenVersion }`.
+4. **Subsequent API Requests**: The client includes the access token in the authorization header:
    ```http
    Authorization: Bearer <access_token>
    ```
-5. **Token Refresh**: When the access token expires, the client calls `POST /api/v1/auth/refresh` with the refresh token. The server validates the token and confirms `tokenVersion` matches the user record.
-6. **Session Revocation**: Calling `POST /api/v1/auth/logout` atomically increments the user's `tokenVersion` in MongoDB, instantly invalidating all previously issued refresh tokens.
+5. **Token Refresh**: When the access token expires, the client calls `POST /api/v1/auth/refresh` with the refresh token. The server verifies the token signature and checks that `tokenVersion` matches the database record.
+6. **Session Invalidation**: Calling `POST /api/v1/auth/logout` increments the user's `tokenVersion` in MongoDB, invalidating all outstanding refresh tokens for that account.
 
 ### OAuth 2.0 Authentication Flow
 ```text
@@ -201,7 +206,7 @@ Browser                         Server                      OAuth Provider (Goog
    │                              │◄── Return email, name, avatar ────────│
    │                              │                                       │
    │                              ├─── Find or create user in MongoDB     │
-   │                              │    (strictly assign role: 'user')     │
+   │                              │    (new accounts default to 'user')   │
    │                              ├─── Sign application JWT tokens        │
    │                              │                                       │
    │◄── Redirect to Frontend ─────│                                       │
@@ -218,9 +223,7 @@ Browser                         Server                      OAuth Provider (Goog
 | :--- | :--- |
 | **Public** | Read published articles, browse tags, search posts, read approved comments. |
 | **User** | All public capabilities + create posts, edit/delete owned posts, post comments, edit/delete owned comments, update profile, real-time notification alerts. |
-| **Admin** | All user capabilities + manage any post, moderate any comment (`visible` / `hidden`), access admin metrics/stats, list users, toggle user bans, and upgrade/downgrade user roles. |
-
-*Note: While client-side route guards prevent unauthorized navigation, the Express backend serves as the authoritative security boundary.*
+| **Admin** | All user capabilities + manage any post, moderate comments (`visible` / `hidden`), access admin metrics, list all users, toggle user bans, and update user roles. |
 
 ---
 
@@ -288,7 +291,7 @@ Base path: `/api/v1`
 
 ## 8. API Response Format
 
-All API responses strictly adhere to a consistent contract.
+All API responses use a standard response envelope.
 
 ### Success Response
 ```json
@@ -346,7 +349,7 @@ All API responses strictly adhere to a consistent contract.
 
 ## 9. Database Models & Schema Design
 
-### Entity Relationship Diagram
+### Entity Relationships
 
 ```text
        ┌──────────────────────┐
@@ -369,7 +372,7 @@ All API responses strictly adhere to a consistent contract.
 - **Post (`Post.ts`)**:
   - Fields: `title`, `slug` (unique index), `excerpt`, `content`, `coverImage`, `tags`, `status` (`published` \| `draft`), `author` (ref: `User`), `views`, `likes`, `deletedAt`.
   - Indexes: `{ slug: 1 }` (unique), `{ author: 1 }`, `{ status: 1, createdAt: -1 }`, `{ tags: 1, status: 1 }`, `{ author: 1, createdAt: -1 }`.
-  - Soft Delete: Query middleware automatically suppresses records where `deletedAt !== null` unless explicitly requested.
+  - Soft Delete: Query middleware automatically filters out records where `deletedAt !== null` unless explicitly requested.
 - **Comment (`Comment.ts`)**:
   - Fields: `content`, `author` (ref: `User`), `post` (ref: `Post`), `status` (`visible` \| `hidden`), `deletedAt`.
   - Indexes: `{ post: 1, status: 1, createdAt: -1 }`, `{ author: 1 }`, `{ post: 1 }`.
@@ -380,33 +383,33 @@ All API responses strictly adhere to a consistent contract.
 
 ### Backend Configuration (`backend/.env`)
 
-| Variable | Description | Default / Example |
+| Variable | Description | Example |
 | :--- | :--- | :--- |
-| `NODE_ENV` | Application runtime mode (`development` / `production`) | `development` |
-| `PORT` | HTTP port for backend API & Socket.io server | `5000` |
-| `CLIENT_URL` | Allowed frontend URL for CORS & redirects | `http://localhost:5173` |
-| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/mern_blog` |
-| `JWT_ACCESS_SECRET` | Secret key for signing access tokens | `<strong-random-string>` |
-| `JWT_REFRESH_SECRET` | Secret key for signing refresh tokens | `<different-strong-random-string>` |
-| `JWT_ACCESS_EXPIRES_IN` | Access token lifespan | `15m` |
-| `JWT_REFRESH_EXPIRES_IN` | Refresh token lifespan | `7d` |
-| `RATE_LIMIT_WINDOW_MS` | Global rate limit window in milliseconds | `900000` (15 mins) |
+| `NODE_ENV` | Application environment (`development` / `production`) | `development` |
+| `PORT` | Server listening port | `5000` |
+| `CLIENT_URL` | Allowed frontend origin for CORS and OAuth redirects | `http://localhost:5173` |
+| `MONGODB_URI` | MongoDB connection URI | `mongodb://localhost:27017/mern_blog` |
+| `JWT_ACCESS_SECRET` | Secret key for access token signing | `<jwt-access-secret>` |
+| `JWT_REFRESH_SECRET` | Secret key for refresh token signing | `<jwt-refresh-secret>` |
+| `JWT_ACCESS_EXPIRES_IN` | Access token duration | `15m` |
+| `JWT_REFRESH_EXPIRES_IN` | Refresh token duration | `7d` |
+| `RATE_LIMIT_WINDOW_MS` | Rate limit window in milliseconds | `900000` (15 mins) |
 | `RATE_LIMIT_MAX` | Maximum API requests allowed per window | `100` |
-| `ADMIN_NAME` | Display name for seed admin account | `Administrator` |
-| `ADMIN_EMAIL` | Email for seed admin account | `admin@example.com` |
-| `ADMIN_PASSWORD` | Password for seed admin account | `<secure-admin-password>` |
-| `GOOGLE_CLIENT_ID` | Google Cloud Console OAuth Client ID | `<client-id>.apps.googleusercontent.com` |
-| `GOOGLE_CLIENT_SECRET`| Google Cloud Console OAuth Client Secret | `<client-secret>` |
-| `GOOGLE_CALLBACK_URL` | Registered Google OAuth redirect URI | `http://localhost:5000/api/v1/auth/google/callback` |
-| `FACEBOOK_APP_ID` | Meta for Developers App ID | `<app-id>` |
-| `FACEBOOK_APP_SECRET` | Meta for Developers App Secret | `<app-secret>` |
-| `FACEBOOK_CALLBACK_URL`| Registered Facebook OAuth redirect URI | `http://localhost:5000/api/v1/auth/facebook/callback` |
+| `ADMIN_NAME` | Name for initial admin account seed | `Administrator` |
+| `ADMIN_EMAIL` | Email for initial admin account seed | `admin@example.com` |
+| `ADMIN_PASSWORD` | Password for initial admin account seed | `<admin-password>` |
+| `GOOGLE_CLIENT_ID` | Google OAuth Client ID | `<google-client-id>` |
+| `GOOGLE_CLIENT_SECRET`| Google OAuth Client Secret | `<google-client-secret>` |
+| `GOOGLE_CALLBACK_URL` | Google OAuth callback URL | `http://localhost:5000/api/v1/auth/google/callback` |
+| `FACEBOOK_APP_ID` | Facebook OAuth App ID | `<facebook-app-id>` |
+| `FACEBOOK_APP_SECRET` | Facebook OAuth App Secret | `<facebook-app-secret>` |
+| `FACEBOOK_CALLBACK_URL`| Facebook OAuth callback URL | `http://localhost:5000/api/v1/auth/facebook/callback` |
 
 ### Frontend Configuration (`frontend/.env`)
 
-| Variable | Description | Default / Example |
+| Variable | Description | Example |
 | :--- | :--- | :--- |
-| `VITE_API_BASE_URL` | Base endpoint URL for the backend API | `http://localhost:5000/api/v1` |
+| `VITE_API_BASE_URL` | API base endpoint | `http://localhost:5000/api/v1` |
 
 ---
 
@@ -415,7 +418,7 @@ All API responses strictly adhere to a consistent contract.
 ### Prerequisites
 - **Node.js**: v18.0.0 or later (v20+ recommended)
 - **npm**: v9.0.0 or later
-- **MongoDB**: Local MongoDB instance (`mongodb://localhost:27017`) or a MongoDB Atlas cluster URI
+- **MongoDB**: Local MongoDB instance (`mongodb://localhost:27017`) or MongoDB Atlas cluster
 
 ### Clone Repository
 ```bash
@@ -438,18 +441,18 @@ cd <repository-directory>
 3. **Configure environment variables**:
    ```bash
    cp .env.example .env
-   # Edit .env with your MongoDB URI, JWT secrets, and optional OAuth credentials
+   # Edit .env with your database URI and secrets
    ```
-4. **Provision the Administrator Account**:
+4. **Seed the Initial Administrator Account**:
    ```bash
    npm run seed:admin
    ```
-   *Creates the initial admin account defined by `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`.*
-5. **(Optional) Seed Rich Demo Blogs**:
+   *Creates the administrator account using `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`.*
+5. **(Optional) Seed Sample Articles**:
    ```bash
    npm run seed:blogs
    ```
-6. **Start the backend development server**:
+6. **Start the development server**:
    ```bash
    npm run dev
    ```
@@ -472,17 +475,17 @@ cd <repository-directory>
    cp .env.example .env
    # Ensure VITE_API_BASE_URL=http://localhost:5000/api/v1
    ```
-4. **Start the frontend development server**:
+4. **Start the development server**:
    ```bash
    npm run dev
    ```
-   *The application will be accessible at `http://localhost:5173`.*
+   *The client application starts at `http://localhost:5173`.*
 
 ---
 
 ## 14. Running Tests
 
-The test suite covers unit logic, end-to-end HTTP integration, real-time Socket.io events, and React component behaviors.
+The test suite includes unit tests, integration tests, Socket.io event tests, and frontend component tests.
 
 ### Backend Tests (Jest)
 Run all backend unit and integration test suites:
@@ -490,62 +493,54 @@ Run all backend unit and integration test suites:
 cd backend
 npm test
 ```
-Run with code coverage reporting:
+
+Run tests with coverage reporting:
 ```bash
 npm run test:coverage
 ```
 
 ### Frontend Tests (Vitest)
-Run frontend UI and authentication tests:
+Run frontend UI and form validation tests:
 ```bash
 cd frontend
 npm test
 ```
 
-### Current Test Suite Verification
-```text
-Backend Test Suites:  6 passed, 6 total
-Backend Tests:        73 passed, 73 total
-Frontend Test Suites: 1 passed, 1 total
-Frontend Tests:       6 passed, 6 total
-Total Passing Tests:  79 passed (100% pass rate)
-```
+### Test Coverage Overview
+The test suite contains 79 passing tests across backend and frontend:
+- **Backend**: 6 test suites, 73 tests covering authentication, RBAC, validators, slug generation, REST endpoints, and Socket.io events.
+- **Frontend**: 1 test suite, 6 tests covering login and registration form validation and rendering.
 
 ---
 
-## 15. Security & Hardening Controls
+## 15. Security
 
-- **Database Password Obfuscation**: User passwords cannot be fetched by default queries (`select: false`), and are scrubbed inside the schema's `toJSON()` transform.
-- **Strict Role Elevation Prevention**: The public registration schema strips any arbitrary `role` parameter using Joi's `{ stripUnknown: true }`. New accounts are always instantiated with role `'user'`.
-- **Dual-Layer RBAC**: Endpoints require `authenticate` and `requireAdmin()` middleware before reaching business logic.
-- **Resource Ownership Enforcement**: Update and delete handlers check `resource.author.toString() === req.user.id` or bypass only if `req.user.role === 'admin'`.
-- **JWT Cryptographic Isolation**: Access tokens and refresh tokens utilize distinct secrets (`JWT_ACCESS_SECRET` vs `JWT_REFRESH_SECRET`) and are rejected if interchanged.
-- **Refresh Token Invalidation**: Instant logout revocation using an atomic `tokenVersion` counter.
-- **Input Sanitization**: MongoDB ObjectIds, slugs, and payload schemas are strictly typed and validated before reaching Mongoose.
-- **Production Error Masking**: `errorHandler` suppresses internal error stacks and database details in production environments.
-- **Strict CORS & Helmet**: CORS is restricted to the specific frontend origin (`config.clientUrl`), and standard HTTP security headers are set via Helmet.
-
----
-
-## 16. Performance & Optimizations
-
-- **Database Indexing**:
-  - Slugs, email addresses, and authors have dedicated B-Tree indexes.
-  - Compound indexes on `{ status: 1, createdAt: -1 }` and `{ post: 1, status: 1, createdAt: -1 }` optimize public feeds and discussion thread queries.
-- **Pagination & Capped Page Limits**:
-  - Global pagination validation enforces default (`limit=10`) and maximum (`limit=100`) constraints to prevent denial-of-service via unbounded database queries.
-- **Selective Population**:
-  - Population queries explicitly select minimal required fields (e.g., `.populate('author', 'name avatar')`), reducing memory usage and network transfer overhead.
-- **Efficient Gzip Compression**:
-  - Enabled globally via `compression()` middleware for all JSON responses.
+- **Password Storage**: Passwords are encrypted using bcrypt with 10 salt rounds before persistence. The password field is omitted from default queries (`select: false`) and stripped by the schema's `toJSON()` transform.
+- **Role Assignment**: Public registration schemas do not accept role parameters; accounts created via public endpoints are always assigned the `user` role.
+- **Access Control**: Protected endpoints require `authenticate` and role-checking middleware (`requireRole`, `requireAdmin`).
+- **Resource Ownership**: Authorship is verified by comparing `resource.author.toString()` with `req.user.id` from the verified JWT.
+- **Token Separation**: Distinct secrets are used for access tokens and refresh tokens.
+- **Refresh Revocation**: User records maintain a `tokenVersion` counter that is incremented upon logout to invalidate existing refresh tokens.
+- **Input Validation**: Joi validation schemas strip unknown properties and enforce format and length constraints.
+- **Error Handling**: The centralized error handler prevents internal error traces and database details from being returned in production.
+- **Headers & CORS**: HTTP security headers are set using Helmet, and CORS is restricted to the configured `CLIENT_URL`.
 
 ---
 
-## 17. Development Command Reference
+## 16. Performance
+
+- **Indexing**: B-Tree indexes on `slug`, `email`, and `author`, with compound indexes on `{ status: 1, createdAt: -1 }` and `{ post: 1, status: 1, createdAt: -1 }` to support common query patterns.
+- **Capped Pagination**: Query parameters are validated with default (`limit=10`) and maximum (`limit=100`) page sizes to prevent unbounded database reads.
+- **Field Selection**: Population queries explicitly select required fields (for example, `.populate('author', 'name avatar')`) to minimize memory usage and payload size.
+- **Response Compression**: Gzip compression is enabled globally via `compression()` middleware.
+
+---
+
+## 17. Development Commands
 
 ### Root Workspace Commands
 ```bash
-npm run dev            # Start both frontend and backend concurrently
+npm run dev            # Start frontend and backend concurrently
 npm run build          # Build both frontend and backend for production
 npm run seed:admin     # Seed administrator account
 npm run seed:blogs     # Seed sample articles and demo authors
@@ -553,13 +548,13 @@ npm run seed:blogs     # Seed sample articles and demo authors
 
 ### Backend Commands (`/backend`)
 ```bash
-npm run dev            # Run backend in watch mode with tsx
-npm run build          # Compile TypeScript code to dist/
-npm run start          # Start compiled production server (node dist/server.js)
-npm run typecheck      # Run tsc --noEmit for static type verification
-npm test               # Run Jest test suite (unit + integration + socket)
+npm run dev            # Start backend in watch mode with tsx
+npm run build          # Compile TypeScript to dist/
+npm run start          # Start compiled server (node dist/server.js)
+npm run typecheck      # Run tsc type validation
+npm test               # Run Jest test suites
 npm run test:coverage  # Run Jest with coverage report
-npm run seed:admin     # Provision admin user
+npm run seed:admin     # Seed administrator account
 npm run seed:blogs     # Populate sample posts and users
 ```
 
@@ -574,48 +569,36 @@ npm run preview        # Preview production build locally
 
 ---
 
-## 18. Interview & Demo Walkthrough (5–10 Minutes)
+## 18. Demo Walkthrough
 
-Follow this structured flow for technical evaluations or portfolio walkthroughs:
+A walkthrough of the application can cover:
 
-1. **Architecture Overview (1 min)**:
-   - Introduce the unified architecture: Express + TypeScript backend running beside a React 18 frontend with Socket.io real-time integration and MongoDB persistence.
-2. **User Authentication & Session Management (2 mins)**:
-   - Demonstrate user registration on `/register`. Explain how Joi validation prevents privilege escalation by stripping `role: admin`.
-   - Log in and inspect the JWT tokens returned. Point out short-lived access tokens and database-backed refresh token rotation.
-3. **Content Creation & Soft-Delete Lifecycle (2 mins)**:
-   - Navigate to `/dashboard/create-post` and publish a blog article.
-   - Show automatic slug generation with conflict suffix resolution.
-   - Delete the post and demonstrate that it is softly deleted (`deletedAt`), remaining hidden from public queries while retaining data integrity.
-4. **Role-Based Authorization & Admin Console (2 mins)**:
-   - Log in with the administrator account (`npm run seed:admin`).
-   - Open `/admin` to show platform metrics, the user directory, and comment moderation.
-   - Toggle another user's role from `'user'` to `'admin'` or suspend an account.
-5. **Real-Time Notification Delivery (2 mins)**:
-   - Open two browser windows side-by-side (User A on window 1, User B on window 2).
-   - Have User B leave a comment on User A's post.
-   - Show the real-time notification bell update instantly on User A's screen via Socket.io without page reload.
-6. **Code Quality & Testing (1 min)**:
-   - Run `npm test` in the terminal to display all 79 unit and integration tests passing.
+1. **Authentication**: Register a new account on `/register` or sign in on `/login`. Inspect the returned JWT access and refresh tokens.
+2. **Blog Browsing & Search**: Browse the article index on `/blog`, search by keyword or tag, and view individual article details.
+3. **Creating & Managing Posts**: Access `/dashboard/create-post` to draft or publish an article. Edit post details or soft-delete the post to verify it is excluded from public views while preserved in the database.
+4. **Comments & Discussion**: Add comments on a published post and edit or delete owned comments.
+5. **Administrative Controls**: Log in with the administrator account to access `/admin`. Review system metrics, inspect the user directory, modify user roles, and toggle comment visibility.
+6. **Real-Time Notifications**: Open two browser windows with different authenticated users. Leave a comment from User B on User A's post to observe the immediate notification badge and dropdown update on User A's screen.
+7. **Automated Tests**: Run `npm test` in the backend and frontend directories to execute the automated test suites.
 
 ---
 
 ## 19. Engineering Highlights & Design Decisions
 
-- **Unified HTTP + Socket.io Server**: Attached directly to a single HTTP instance (`http.createServer(app)`), avoiding duplicate server overhead or port conflicts.
-- **Isolated Socket Authentication**: WebSocket handshakes verify standard application JWTs and automatically route users to private personal rooms (`user:{userId}`), isolating notification delivery.
-- **Service Layer Pattern**: Business logic resides in dedicated services (`auth.service.ts`, `post.service.ts`, `comment.service.ts`, `user.service.ts`), decoupling Express request/response logic from database queries.
-- **Standardized API Contract**: All endpoints use consistent JSON envelopes (`sendSuccess`, `sendPaginated`, `sendError`), making frontend consumption predictable.
-- **Defense in Depth**: Public inputs are validated at the route boundary with Joi, authorized with JWT middleware, sanitized in the service layer, and indexed at the database level.
+- **Unified HTTP + Socket.io Server**: Socket.io attaches to the Express HTTP server instance, allowing real-time capabilities to share the same port and host without separate server management.
+- **Isolated Socket Authentication**: WebSocket connections verify JWTs on handshake and place sockets in private personal rooms (`user:{userId}`) to isolate notification delivery.
+- **Service Layer Pattern**: Business logic and database operations are encapsulated in service files (`auth.service.ts`, `post.service.ts`, `comment.service.ts`, `user.service.ts`), keeping controller methods concise and focused on HTTP transport.
+- **Standardized API Contract**: All endpoints use consistent JSON envelopes (`sendSuccess`, `sendPaginated`, `sendError`), making client integration predictable.
+- **Defense in Depth**: Incoming requests pass through Joi validation, JWT authentication, and role authorization before reaching service operations.
 
 ---
 
 ## 20. Future Roadmap
 
-- **End-to-End Automated Testing**: Add Playwright test suites for automated cross-browser testing.
-- **Object Storage Integration**: Migrate base64 image uploads to AWS S3 or Cloudinary.
-- **Email Verification & Password Reset**: Implement transactional emails for account confirmation and secure reset flows.
-- **Full-Text Search Indexing**: Upgrade regex search to MongoDB Atlas Search or compound text indexes.
+- **End-to-End Automated Testing**: Add Playwright test suites for automated browser testing.
+- **Object Storage Integration**: Support cloud storage (AWS S3 or Cloudinary) for article cover images and avatars.
+- **Email Verification & Password Reset**: Implement transactional emails for account verification and password reset workflows.
+- **Full-Text Search Indexing**: Incorporate MongoDB Atlas Search or compound text indexing for enhanced search scoring.
 
 ---
 
