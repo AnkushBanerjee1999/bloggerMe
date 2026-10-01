@@ -25,28 +25,28 @@ export function PublicLayout() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-slate-50/50 flex flex-col font-sans">
-      <header className="sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-slate-200/80 transition-all shadow-sm">
+    <div className="min-h-screen bg-paper-100 flex flex-col font-sans text-ink">
+      <header className="sticky top-0 z-50 bg-paper-50/95 backdrop-blur-md border-b border-editorial-border transition-colors">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 text-white font-bold text-base shadow-md shadow-blue-500/25 group-hover:scale-105 transition-transform duration-200">
-                b
+            <Link to="/" className="flex items-center gap-2 group">
+              <span className="font-serif font-bold text-2xl tracking-tight text-neutral-900 group-hover:text-brand-600 transition-colors">
+                blogger<span className="font-sans font-semibold text-brand-600 text-lg tracking-normal">Me</span>
               </span>
-              <span className="font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
-                blogger<span className="text-blue-600">Me</span>
+              <span className="hidden sm:inline-block text-[10px] font-mono uppercase tracking-widest text-brand-700/80 bg-brand-50 border border-brand-200/60 px-1.5 py-0.5 rounded">
+                Dispatch
               </span>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-xl bg-slate-100/70 border border-slate-200/60">
+            <nav className="hidden md:flex items-center gap-6">
               {navLinks.map(link => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`px-3.5 py-1.5 text-sm font-medium rounded-lg transition-all ${
+                  className={`text-sm tracking-tight transition-colors ${
                     isActive(link.to)
-                      ? 'text-blue-600 bg-white shadow-xs font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                      ? 'text-brand-600 font-semibold border-b-2 border-brand-600 py-1'
+                      : 'text-neutral-600 hover:text-brand-600 py-1'
                   }`}
                 >
                   {link.label}
@@ -55,76 +55,75 @@ export function PublicLayout() {
             </nav>
           </div>
 
-          <div className="hidden md:flex items-center gap-3">
-            {/* <Link
-              to="/search"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-500 bg-slate-100/80 hover:bg-slate-100 hover:text-slate-800 border border-slate-200/60 transition-colors"
-              title="Search articles"
+          <div className="hidden md:flex items-center gap-4">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-1.5 text-xs text-neutral-600 hover:text-brand-600 py-1.5 px-2.5 rounded hover:bg-brand-50 transition-colors"
+              title="Search and browse"
             >
-              <Search size={14} className="text-slate-400" />
+              <Search size={14} className="text-neutral-500" />
               <span>Search</span>
-              <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-white rounded border border-slate-200">⌘K</kbd>
-            </Link> */}
+            </Link>
 
             {currentUser ? (
-              <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
+              <div className="flex items-center gap-3 pl-3 border-l border-neutral-200">
                 <NotificationBell />
 
                 {currentUser.role === 'admin' && (
                   <Link
                     to="/admin"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200/60 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-brand-700 hover:text-brand-900 bg-brand-50 hover:bg-brand-100 transition-colors border border-brand-200"
                   >
-                    <Shield size={14} /> Admin
+                    <Shield size={13} /> Admin
                   </Link>
                 )}
 
                 <Link
                   to="/dashboard"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-700 hover:text-brand-600 hover:bg-brand-50 transition-colors"
                 >
-                  <LayoutDashboard size={15} /> Dashboard
+                  <LayoutDashboard size={14} /> Dashboard
                 </Link>
 
                 <Link
                   to="/dashboard/profile"
-                  className="flex items-center gap-2.5 p-1 pl-1.5 pr-2.5 rounded-xl hover:bg-slate-100 border border-transparent hover:border-slate-200/60 transition-all group"
+                  className="flex items-center gap-2 p-1 rounded hover:bg-brand-50 transition-colors group"
                   title="View Profile"
                 >
                   <Avatar src={currentUser.avatar} alt={currentUser.name} size="sm" />
-                  <span className="text-xs font-semibold text-slate-800 max-w-[100px] truncate group-hover:text-blue-600">
+                  <span className="text-xs font-medium text-neutral-800 group-hover:text-brand-600 max-w-[100px] truncate">
                     {currentUser.name.split(' ')[0]}
                   </span>
                 </Link>
 
                 <button
                   onClick={handleLogout}
-                  className="text-slate-400 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-red-50"
+                  className="text-neutral-400 hover:text-error-600 transition-colors p-1.5 rounded hover:bg-error-50"
                   title="Logout"
                 >
-                  <LogOut size={16} />
+                  <LogOut size={15} />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition-colors"
+                  className="text-xs font-medium text-neutral-700 hover:text-brand-600 px-3 py-1.5 rounded hover:bg-brand-50 transition-colors"
                 >
                   Sign in
                 </Link>
                 <Link
                   to="/register"
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-sm shadow-blue-500/25 active:scale-[0.98] transition-all"
+                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-md text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 shadow-xs transition-colors"
                 >
-                  <PenSquare size={15} /> Get started
+                  <PenSquare size={13} /> Start writing
                 </Link>
               </div>
             )}
           </div>
 
           <button
-            className="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+            className="md:hidden p-1.5 rounded text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle navigation"
           >
@@ -133,14 +132,14 @@ export function PublicLayout() {
         </div>
 
         {mobileOpen && (
-          <div className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-xl px-4 py-4 space-y-2 shadow-lg">
-            <div className="flex items-center gap-2 mb-3">
+          <div className="md:hidden border-t border-editorial-border bg-paper-50 px-4 py-4 space-y-3">
+            <div className="flex items-center gap-2 mb-2">
               <Link
-                to="/search"
+                to="/blog"
                 onClick={() => setMobileOpen(false)}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-600 bg-slate-100 border border-slate-200"
+                className="w-full flex items-center gap-2 px-3 py-2 rounded text-xs font-medium text-neutral-600 bg-neutral-100 border border-neutral-200"
               >
-                <Search size={15} /> Search articles...
+                <Search size={14} /> Search articles...
               </Link>
             </div>
 
@@ -149,21 +148,21 @@ export function PublicLayout() {
                 key={link.to}
                 to={link.to}
                 onClick={() => setMobileOpen(false)}
-                className={`block px-3 py-2 text-sm font-medium rounded-xl ${
-                  isActive(link.to) ? 'text-blue-600 bg-blue-50/80 font-semibold' : 'text-slate-600 hover:bg-slate-50'
+                className={`block px-3 py-2 text-sm font-medium rounded ${
+                  isActive(link.to) ? 'text-neutral-950 bg-neutral-100 font-semibold' : 'text-neutral-600 hover:bg-neutral-50'
                 }`}
               >
                 {link.label}
               </Link>
             ))}
 
-            <div className="pt-3 border-t border-slate-100 space-y-1">
+            <div className="pt-3 border-t border-neutral-200 space-y-1">
               {currentUser ? (
                 <>
                   <Link
                     to="/dashboard"
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50"
+                    className="block px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded"
                   >
                     Dashboard
                   </Link>
@@ -171,7 +170,7 @@ export function PublicLayout() {
                     <Link
                       to="/admin"
                       onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 text-sm font-semibold text-purple-700 bg-purple-50 rounded-xl"
+                      className="block px-3 py-2 text-sm font-medium text-neutral-800 bg-neutral-100 rounded"
                     >
                       Admin Dashboard
                     </Link>
@@ -179,13 +178,13 @@ export function PublicLayout() {
                   <Link
                     to="/dashboard/profile"
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50"
+                    className="block px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 rounded"
                   >
                     Profile Settings
                   </Link>
                   <button
                     onClick={() => { handleLogout(); setMobileOpen(false); }}
-                    className="block w-full text-left px-3 py-2 text-sm font-medium text-red-600 rounded-xl hover:bg-red-50"
+                    className="block w-full text-left px-3 py-2 text-sm font-medium text-rose-700 hover:bg-rose-50 rounded"
                   >
                     Logout
                   </button>
@@ -195,16 +194,16 @@ export function PublicLayout() {
                   <Link
                     to="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="text-center px-3 py-2 text-sm font-medium text-slate-700 bg-slate-50 rounded-xl border border-slate-200"
+                    className="text-center px-3 py-2 text-xs font-medium text-neutral-700 bg-neutral-100 rounded border border-neutral-200"
                   >
                     Sign in
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setMobileOpen(false)}
-                    className="text-center px-3 py-2 text-sm font-semibold text-white bg-blue-600 rounded-xl shadow-xs"
+                    className="text-center px-3 py-2 text-xs font-semibold text-white bg-neutral-900 rounded"
                   >
-                    Get started
+                    Start writing
                   </Link>
                 </div>
               )}
@@ -217,19 +216,25 @@ export function PublicLayout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-slate-800 bg-slate-950 text-slate-400">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white text-xs font-bold shadow-md shadow-blue-500/20">b</span>
-            <span className="font-extrabold text-base text-white tracking-tight">blogger<span className="text-blue-500">Me</span></span>
-            <span className="text-xs text-slate-500 hidden sm:inline-block">· The modern developer publishing network</span>
+      <footer className="border-t border-editorial-border bg-paper-50 text-neutral-600 mt-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="space-y-2 max-w-sm">
+            <Link to="/" className="inline-block group">
+              <span className="font-serif font-bold text-xl text-neutral-900 group-hover:text-brand-600 tracking-tight transition-colors">
+                blogger<span className="font-sans font-semibold text-brand-600 text-sm">Me</span>
+              </span>
+            </Link>
+            <p className="text-xs text-neutral-500 leading-relaxed">
+              An independent developer publication covering software engineering, distributed systems, web standards, and modern architecture.
+            </p>
           </div>
-          <div className="flex items-center gap-6 text-xs text-slate-400">
-            <Link to="/blog" className="hover:text-white transition-colors">Explore Articles</Link>
-            <Link to="/login" className="hover:text-white transition-colors">Sign In</Link>
-            <Link to="/register" className="hover:text-white transition-colors">Join Free</Link>
-            <span className="text-slate-600">|</span>
-            <span className="text-slate-500">© {new Date().getFullYear()} bloggerMe</span>
+          <div className="flex flex-wrap items-center gap-6 text-xs text-neutral-600">
+            <Link to="/" className="hover:text-brand-600 transition-colors">Home</Link>
+            <Link to="/blog" className="hover:text-brand-600 transition-colors">Articles</Link>
+            <Link to="/login" className="hover:text-brand-600 transition-colors">Author Sign In</Link>
+            <Link to="/register" className="hover:text-brand-600 transition-colors">Write with Us</Link>
+            <span className="text-neutral-300">|</span>
+            <span className="text-neutral-400">© {new Date().getFullYear()} bloggerMe. All rights reserved.</span>
           </div>
         </div>
       </footer>

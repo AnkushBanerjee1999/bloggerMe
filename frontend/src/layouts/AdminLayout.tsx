@@ -41,23 +41,29 @@ export function AdminLayout() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      <aside className="hidden md:flex w-64 flex-col bg-gray-900 fixed inset-y-0 left-0">
-        <div className="flex items-center gap-2 h-16 px-6 border-b border-gray-800">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white text-sm">M</span>
-          <span className="font-bold text-white">Admin Panel</span>
+    <div className="min-h-screen bg-paper-100 flex font-sans">
+      <aside className="hidden md:flex w-64 flex-col bg-neutral-950 fixed inset-y-0 left-0 border-r border-neutral-800">
+        <div className="flex items-center gap-2 h-16 px-6 border-b border-neutral-800/80">
+          <Link to="/" className="flex items-center gap-1.5">
+            <span className="font-serif font-bold text-lg text-white">
+              blogger<span className="font-sans font-semibold text-brand-500 text-sm">Me</span>
+            </span>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-brand-400 bg-brand-950 border border-brand-800 px-1.5 py-0.5 rounded ml-1">
+              Admin
+            </span>
+          </Link>
         </div>
         <nav className="flex-1 px-3 py-4 space-y-1">
-          <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Administration</p>
+          <p className="px-3 text-[11px] font-mono uppercase tracking-wider text-neutral-500 mb-2">Administration</p>
           {adminNav.map(item => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-colors ${isActive(item.to) ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}`}
+                className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${isActive(item.to) ? 'bg-brand-600 text-white font-semibold shadow-xs' : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'}`}
               >
-                <Icon size={18} />
+                <Icon size={17} className={isActive(item.to) ? 'text-white' : 'text-neutral-400'} />
                 {item.label}
               </Link>
             );

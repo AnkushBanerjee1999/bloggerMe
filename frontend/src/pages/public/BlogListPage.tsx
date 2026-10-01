@@ -42,55 +42,59 @@ export function BlogListPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 py-10 md:py-16 space-y-10">
-      <div className="text-center max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-xs font-semibold mb-3">
-          <Sparkles size={14} /> Knowledge Hub
+      <div className="max-w-2xl">
+        <div className="text-[11px] font-mono uppercase tracking-widest text-neutral-500 font-semibold mb-2">
+          The Archive & Library
         </div>
-        <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight mb-3">The Blog</h1>
-        <p className="text-gray-500 text-base">Browse all technical articles, explore popular topics, or search for tutorials.</p>
+        <h1 className="font-serif text-3xl md:text-5xl font-bold text-neutral-950 tracking-tight mb-3">
+          Articles & Technical Guides
+        </h1>
+        <p className="text-neutral-600 text-sm sm:text-base leading-relaxed">
+          In-depth perspectives on software engineering, distributed systems, web architectures, and developer tooling.
+        </p>
       </div>
 
-      {/* Unauthenticated Visitor Join Banner */}
+      {/* Understated Editorial Writer Invitation with Subtle Brand Tint */}
       {!currentUser && (
-        <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-700 p-6 md:p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
-          <div className="space-y-1 text-center sm:text-left">
-            <h2 className="text-lg md:text-xl font-bold">Write and share your own stories</h2>
-            <p className="text-blue-100 text-sm max-w-md">
-              Join our developer community to publish articles, highlight code snippets, and receive feedback.
+        <div className="border border-brand-200/80 bg-brand-50/40 rounded-md p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs">
+          <div className="space-y-0.5">
+            <h2 className="font-serif text-base font-bold text-neutral-950">Publish with bloggerMe</h2>
+            <p className="text-neutral-600 text-xs max-w-lg">
+              Write in clean Markdown, build your technical portfolio, and share engineering knowledge with a dedicated audience.
             </p>
           </div>
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2.5 flex-shrink-0">
             <Link
               to="/register"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white text-blue-700 font-semibold text-sm shadow hover:bg-blue-50 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs shadow-xs transition-colors"
             >
-              <PenSquare size={16} /> Start Writing
+              <PenSquare size={13} /> Start Writing
             </Link>
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/40 bg-white/10 hover:bg-white/20 text-white font-medium text-sm backdrop-blur-sm transition-colors"
+              className="inline-flex items-center px-3.5 py-2 rounded-md border border-neutral-300 bg-white hover:bg-neutral-50 hover:border-brand-300 text-neutral-700 text-xs transition-colors"
             >
-              Sign in
+              Sign In
             </Link>
           </div>
         </div>
       )}
 
       {/* Search and Tags */}
-      <div className="space-y-4">
-        <div className="max-w-xl mx-auto">
+      <div className="space-y-4 pt-2">
+        <div className="max-w-md">
           <Input
             type="text"
-            placeholder="Search articles by title, summary, or tag..."
+            placeholder="Search articles by title, topic, or keyword..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            icon={<Search size={18} />}
+            icon={<Search size={16} className="text-neutral-400" />}
           />
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
           <button
             onClick={() => setSelectedTag(null)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${!selectedTag ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}
+            className={`px-3 py-1 text-xs font-medium rounded transition-colors ${!selectedTag ? 'bg-brand-600 text-white font-semibold shadow-xs' : 'bg-white text-neutral-600 border border-neutral-300 hover:border-brand-300 hover:text-brand-600'}`}
           >
             All Topics
           </button>
@@ -98,9 +102,9 @@ export function BlogListPage() {
             <button
               key={tag}
               onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${selectedTag === tag ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}
+              className={`px-3 py-1 text-xs font-medium rounded transition-colors ${selectedTag === tag ? 'bg-brand-600 text-white font-semibold shadow-xs' : 'bg-white text-neutral-600 border border-neutral-300 hover:border-brand-300 hover:text-brand-600'}`}
             >
-              {tag}
+              #{tag}
             </button>
           ))}
         </div>

@@ -42,11 +42,11 @@ export function Input({
           placeholder={placeholder}
           required={required}
           disabled={disabled}
-          className={`w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 ${disabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : ''} ${icon ? 'pl-10' : ''} ${error ? 'border-red-300' : 'border-gray-300'}`}
+          className={`w-full rounded-md border bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-600 ${disabled ? 'bg-neutral-100 cursor-not-allowed text-neutral-500' : ''} ${icon ? 'pl-10' : ''} ${error ? 'border-error-500 focus:ring-error-500/20 focus:border-error-600' : 'border-neutral-300'}`}
         />
       </div>
-      {hint && !error && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {hint && !error && <p className="mt-1 text-xs text-neutral-500">{hint}</p>}
+      {error && <p className="mt-1 text-xs text-error-600 font-medium">{error}</p>}
     </div>
   );
 }
@@ -84,10 +84,10 @@ export function TextArea({
         placeholder={placeholder}
         required={required}
         rows={rows}
-        className={`w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-y ${error ? 'border-red-300' : 'border-gray-300'}`}
+        className={`w-full rounded-md border bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-600 resize-y ${error ? 'border-error-500 focus:ring-error-500/20 focus:border-error-600' : 'border-neutral-300'}`}
       />
-      {hint && !error && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {hint && !error && <p className="mt-1 text-xs text-neutral-500">{hint}</p>}
+      {error && <p className="mt-1 text-xs text-error-600 font-medium">{error}</p>}
     </div>
   );
 }
@@ -105,8 +105,8 @@ export function Select({ label, name, value, onChange, children, required }: Sel
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1.5">
-          {label}{required && <span className="text-red-500 ml-0.5">*</span>}
+        <label htmlFor={name} className="block text-sm font-medium text-neutral-700 mb-1.5">
+          {label}{required && <span className="text-error-600 ml-0.5">*</span>}
         </label>
       )}
       <select
@@ -115,7 +115,7 @@ export function Select({ label, name, value, onChange, children, required }: Sel
         value={value}
         onChange={onChange}
         required={required}
-        className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+        className="w-full rounded-md border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-600"
       >
         {children}
       </select>

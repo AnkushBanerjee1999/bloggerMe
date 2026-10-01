@@ -88,56 +88,68 @@ export function PostDetailPage() {
   const contentParagraphs = post.content.split('\n\n');
 
   return (
-    <article className="min-h-screen bg-white">
-      {/* Cover */}
-      <div className="relative h-[40vh] md:h-[50vh] bg-gray-900 overflow-hidden">
-        <img src={post.coverImage} alt={post.title} className="h-full w-full object-cover opacity-70" />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
-        <div className="absolute bottom-0 inset-x-0">
-          <div className="mx-auto max-w-3xl px-4 sm:px-6 pb-8">
-            <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-gray-300 hover:text-white mb-4 transition-colors">
-              <ArrowLeft size={16} /> Back to blog
-            </Link>
-            <div className="flex flex-wrap gap-1.5 mb-3">
-              {post.tags.map(tag => <Badge key={tag} color="blue">{tag}</Badge>)}
+    <article className="min-h-screen bg-paper-100">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 pt-10 pb-6">
+        <Link to="/blog" className="inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-brand-600 mb-6 transition-colors">
+          <ArrowLeft size={14} /> Back to articles
+        </Link>
+        
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          {post.tags.map(tag => (
+            <span key={tag} className="text-xs font-mono uppercase tracking-wider text-brand-700 bg-brand-50 border border-brand-200/80 px-2 py-0.5 rounded font-semibold">
+              #{tag}
+            </span>
+          ))}
+        </div>
+
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-950 leading-[1.2] mb-6">
+          {post.title}
+        </h1>
+
+        {/* Author byline */}
+        <div className="flex items-center justify-between py-4 border-t border-b border-editorial-border">
+          <Link to={`/blog?author=${post.authorId}`} className="flex items-center gap-3 group">
+            <Avatar src={post.authorAvatar} alt={post.authorName} size="md" />
+            <div>
+              <p className="text-xs sm:text-sm font-semibold text-neutral-900 group-hover:text-brand-600 transition-colors">{post.authorName}</p>
+              <p className="text-[11px] text-neutral-400">{formatDate(post.createdAt)}</p>
             </div>
-            <h1 className="text-2xl md:text-4xl font-bold text-white leading-tight">{post.title}</h1>
+          </Link>
+          <div className="flex items-center gap-4 text-xs text-neutral-500 font-mono">
+            <span className="flex items-center gap-1 text-neutral-600"><Clock size={13} className="text-brand-600" /> {readingTime(post.content)}</span>
+            <span className="flex items-center gap-1 text-neutral-600"><Eye size={13} className="text-brand-600" /> {formatNumber(post.views)}</span>
+            <span className="flex items-center gap-1 text-neutral-600"><Heart size={13} className="text-error-500" /> {formatNumber(post.likes)}</span>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
-        {/* Author bar */}
-        <div className="flex items-center justify-between py-6 border-b border-gray-100">
-          <Link to={`/blog?author=${post.authorId}`} className="flex items-center gap-3">
-            <Avatar src={post.authorAvatar} alt={post.authorName} size="md" />
-            <div>
-              <p className="text-sm font-semibold text-gray-900">{post.authorName}</p>
-              <p className="text-xs text-gray-400">{formatDate(post.createdAt)}</p>
-            </div>
-          </Link>
-          <div className="flex items-center gap-4 text-xs text-gray-400">
-            <span className="flex items-center gap-1"><Clock size={14} /> {readingTime(post.content)}</span>
-            <span className="flex items-center gap-1"><Eye size={14} /> {formatNumber(post.views)}</span>
-            <span className="flex items-center gap-1"><Heart size={14} /> {formatNumber(post.likes)}</span>
+      {/* Cover Image */}
+      {post.coverImage && (
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 mb-8">
+          <div className="aspect-[16/9] overflow-hidden rounded-md border border-editorial-border bg-neutral-100">
+            <img src={post.coverImage} alt={post.title} className="h-full w-full object-cover" />
           </div>
         </div>
+      )}
 
+      <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Content */}
-        <div className="py-8 space-y-6">
-          <p className="text-lg text-gray-600 leading-relaxed font-medium">{post.excerpt}</p>
+        <div className="py-6 space-y-6 text-neutral-800 leading-relaxed font-sans text-base sm:text-lg">
+          <p className="font-serif italic text-lg sm:text-xl text-neutral-700 leading-relaxed pb-4 border-b border-neutral-200">
+            {post.excerpt}
+          </p>
           {contentParagraphs.map((para, i) => {
             const trimmed = para.trim();
             if (trimmed.startsWith('## ')) {
-              return <h2 key={i} className="text-xl font-bold text-gray-900 mt-8 mb-2">{trimmed.replace('## ', '')}</h2>;
+              return <h2 key={i} className="font-serif text-2xl font-bold text-neutral-950 mt-10 mb-3">{trimmed.replace('## ', '')}</h2>;
             }
             if (trimmed.startsWith('- ')) {
               const items = trimmed.split('\n').filter(l => l.startsWith('- ')).map(l => l.replace('- ', ''));
               return (
-                <ul key={i} className="space-y-2 pl-4">
+                <ul key={i} className="space-y-2 pl-4 text-sm sm:text-base">
                   {items.map((item, j) => (
-                    <li key={j} className="flex items-start gap-2 text-gray-600">
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-blue-500 flex-shrink-0" />
+                    <li key={j} className="flex items-start gap-2.5 text-neutral-700">
+                      <span className="mt-2.5 h-1.5 w-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
                       <span className="leading-relaxed">{item}</span>
                     </li>
                   ))}
@@ -147,17 +159,17 @@ export function PostDetailPage() {
             if (trimmed.startsWith('```')) {
               const code = trimmed.replace(/```(\w+)?\n?/g, '').replace(/```$/g, '');
               return (
-                <pre key={i} className="bg-gray-900 text-gray-100 rounded-xl p-4 overflow-x-auto text-sm">
+                <pre key={i} className="bg-neutral-900 text-neutral-100 rounded-md p-4 overflow-x-auto text-xs sm:text-sm font-mono my-4 border border-neutral-800">
                   <code>{code}</code>
                 </pre>
               );
             }
-            return <p key={i} className="text-gray-600 leading-relaxed">{trimmed}</p>;
+            return <p key={i} className="text-neutral-700 leading-relaxed text-sm sm:text-base">{trimmed}</p>;
           })}
         </div>
 
         {/* Comments */}
-        <div className="border-t border-gray-100 py-8">
+        <div className="border-t border-editorial-border py-10 mt-10">
           <div className="flex items-center gap-2 mb-6">
             <MessageSquare size={20} className="text-gray-400" />
             <h2 className="text-lg font-bold text-gray-900">Comments ({postComments.length})</h2>

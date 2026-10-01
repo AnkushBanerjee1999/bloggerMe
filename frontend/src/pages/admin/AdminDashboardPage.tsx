@@ -45,15 +45,15 @@ export function AdminDashboardPage() {
   const stats = [
     { label: 'Total Users', value: totalUsersCount, icon: Users, color: 'blue', link: '/admin/users' },
     { label: 'Total Posts', value: totalPostsCount, icon: FileText, color: 'green', link: '/admin/posts' },
-    { label: 'Total Comments', value: totalCommentsCount, icon: MessageSquare, color: 'amber', link: '/admin/comments' },
-    { label: 'Total Views', value: formatNumber(totalViews), icon: Eye, color: 'red', link: '/admin/posts' },
+    { label: 'Total Comments', value: totalCommentsCount, icon: MessageSquare, color: 'purple', link: '/admin/comments' },
+    { label: 'Total Views', value: formatNumber(totalViews), icon: Eye, color: 'amber', link: '/admin/posts' },
   ];
 
   const colorMap: Record<string, string> = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    amber: 'bg-amber-50 text-amber-600',
-    red: 'bg-red-50 text-red-600',
+    blue: 'bg-brand-50 text-brand-600 border border-brand-100',
+    green: 'bg-success-50 text-success-600 border border-success-100',
+    purple: 'bg-indigo-50 text-indigo-600 border border-indigo-100',
+    amber: 'bg-warning-50 text-warning-600 border border-warning-100',
   };
 
   // Posts by author

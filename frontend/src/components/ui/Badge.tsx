@@ -9,17 +9,17 @@ interface BadgeProps {
 }
 
 const colors: Record<BadgeColor, string> = {
-  blue: 'bg-blue-50 text-blue-700 border-blue-200',
-  green: 'bg-green-50 text-green-700 border-green-200',
-  red: 'bg-red-50 text-red-700 border-red-200',
-  gray: 'bg-gray-100 text-gray-600 border-gray-200',
-  amber: 'bg-amber-50 text-amber-700 border-amber-200',
-  purple: 'bg-purple-50 text-purple-700 border-purple-200',
+  blue: 'bg-brand-50 text-brand-700 border-brand-200',
+  green: 'bg-success-50 text-success-700 border-success-100',
+  red: 'bg-error-50 text-error-700 border-error-100',
+  gray: 'bg-neutral-100 text-neutral-700 border-neutral-200',
+  amber: 'bg-warning-50 text-warning-700 border-warning-100',
+  purple: 'bg-indigo-50 text-indigo-700 border-indigo-200',
 };
 
 export function Badge({ children, color = 'gray', size = 'sm' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center rounded-full border font-medium ${colors[color]} ${size === 'sm' ? 'px-2.5 py-0.5 text-xs' : 'px-3 py-1 text-sm'}`}>
+    <span className={`inline-flex items-center rounded border font-medium ${colors[color]} ${size === 'sm' ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-1 text-xs'}`}>
       {children}
     </span>
   );

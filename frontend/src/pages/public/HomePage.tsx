@@ -55,286 +55,142 @@ export function HomePage() {
     },
   ];
 
+  const categoryTokens: Record<string, { bg: string; text: string; border: string }> = {
+    Frontend: { bg: 'bg-brand-50/70', text: 'text-brand-700', border: 'border-brand-200' },
+    Backend: { bg: 'bg-indigo-50/70', text: 'text-indigo-700', border: 'border-indigo-200' },
+    Architecture: { bg: 'bg-teal-50/70', text: 'text-teal-700', border: 'border-teal-200' },
+    TypeScript: { bg: 'bg-sky-50/70', text: 'text-sky-700', border: 'border-sky-200' },
+    DevOps: { bg: 'bg-orange-50/70', text: 'text-orange-700', border: 'border-orange-200' },
+    Career: { bg: 'bg-amber-50/70', text: 'text-amber-700', border: 'border-amber-200' },
+  };
+
   return (
-    <div className="space-y-20 pb-20">
-      {/* 1. Hero Section */}
-      <section className="relative overflow-hidden bg-slate-950 text-white border-b border-slate-800/80">
-        {/* Modern Dynamic Mesh & Glowing Orbs Background */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.25),rgba(255,255,255,0))]" />
-        <div className="absolute -top-40 -left-20 h-96 w-96 rounded-full bg-blue-600/20 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 -right-20 h-96 w-96 rounded-full bg-indigo-600/20 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-cyan-500/15 blur-3xl pointer-events-none" />
-        
-        {/* Subtle geometric dot pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.04] pointer-events-none" 
-          style={{ 
-            backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-            backgroundSize: '32px 32px'
-          }} 
-        />
-
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 py-20 md:py-28">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-6 backdrop-blur-sm shadow-inner">
-                <Sparkles size={14} className="text-blue-400 animate-pulse" /> Modern Publishing Community
-              </div>
-              
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] mb-6">
-                Stories, ideas, & insights from the{' '}
-                <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent">
-                  developer world
-                </span>
-              </h1>
-              
-              <p className="text-lg sm:text-xl text-slate-300 font-normal leading-relaxed mb-8 max-w-xl">
-                A modern publishing platform where developers, designers, and tech leaders share knowledge, architectural patterns, tutorials, and deep dives.
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-4">
-                <Link
-                  to="/blog"
-                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 active:scale-[0.98] transition-all duration-200"
-                >
-                  Explore Articles <ArrowRight size={18} />
-                </Link>
-
-                {!currentUser && (
-                  <Link
-                    to="/register"
-                    className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-semibold text-white bg-white/10 hover:bg-white/15 border border-white/20 backdrop-blur-md hover:border-white/30 active:scale-[0.98] transition-all duration-200 shadow-sm"
-                  >
-                    <PenSquare size={18} className="text-blue-400" /> Get Started Free
-                  </Link>
-                )}
-              </div>
-
-              {/* Highlights */}
-              <div className="mt-10 pt-8 border-t border-slate-800/80 flex flex-wrap items-center gap-6 text-xs text-slate-400">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Always free to read & publish</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-blue-400" />
-                  <span>Curated tech categories</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-indigo-400" />
-                  <span>Global developer network</span>
-                </div>
-              </div>
+    <div className="space-y-16 sm:space-y-20 pb-20">
+      {/* 1. Editorial Hero / Introduction with Subtle Warm-to-Blue Tint */}
+      <section className="border-b border-editorial-border pb-14 pt-10 sm:pt-14 bg-gradient-to-b from-brand-50/40 via-paper-50 to-paper-100">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="max-w-3xl space-y-4">
+            <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-brand-700 font-semibold bg-brand-50 border border-brand-200/80 px-2.5 py-1 rounded">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-600 animate-pulse" />
+              <span>BloggerMe Dispatch</span>
+              <span className="text-brand-300">/</span>
+              <span>Engineering & Systems</span>
             </div>
 
-            {/* Visual Glass Terminal Preview */}
-            <div className="hidden lg:block lg:col-span-5">
-              <div className="relative mx-auto w-full max-w-md">
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 opacity-30 blur-xl" />
-                <div className="relative rounded-2xl border border-white/10 bg-slate-900/85 p-6 backdrop-blur-xl shadow-2xl">
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded-full bg-red-500/80" />
-                      <div className="h-3 w-3 rounded-full bg-amber-500/80" />
-                      <div className="h-3 w-3 rounded-full bg-emerald-500/80" />
-                    </div>
-                    <span className="text-[11px] font-mono text-slate-400">bloggerme.dev</span>
-                  </div>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-neutral-950 leading-[1.15]">
+              Ideas, engineering stories, and practical knowledge from developers.
+            </h1>
 
-                  <div className="mt-5 space-y-4 font-mono text-xs">
-                    <div className="flex items-center justify-between text-slate-400">
-                      <span># Featured Topics</span>
-                      <span className="text-blue-400 text-[11px]">Trending</span>
-                    </div>
+            <p className="text-sm sm:text-base text-neutral-600 font-normal leading-relaxed max-w-2xl pt-1">
+              Explore deep dives on software engineering, distributed systems, web standards, architecture, and technology. An independent technical publication written by practitioners.
+            </p>
 
-                    <div className="grid grid-cols-2 gap-2.5">
-                      <div className="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60 flex flex-col hover:border-slate-600 transition-colors">
-                        <span className="text-cyan-400 font-semibold text-xs">Full-Stack MERN</span>
-                        <span className="text-[11px] text-slate-400 mt-1">Architecture & APIs</span>
-                      </div>
-                      <div className="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60 flex flex-col hover:border-slate-600 transition-colors">
-                        <span className="text-indigo-400 font-semibold text-xs">React 18 & Vite</span>
-                        <span className="text-[11px] text-slate-400 mt-1">Performance Tuning</span>
-                      </div>
-                      <div className="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60 flex flex-col hover:border-slate-600 transition-colors">
-                        <span className="text-blue-400 font-semibold text-xs">TypeScript 5</span>
-                        <span className="text-[11px] text-slate-400 mt-1">Clean Design Patterns</span>
-                      </div>
-                      <div className="p-3 rounded-xl bg-slate-800/70 border border-slate-700/60 flex flex-col hover:border-slate-600 transition-colors">
-                        <span className="text-emerald-400 font-semibold text-xs">Cloud & DevOps</span>
-                        <span className="text-[11px] text-slate-400 mt-1">Production Best Practices</span>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 text-[11px] text-slate-400 flex items-center justify-between">
-                      <span className="text-slate-500">Ready to contribute?</span>
-                      <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium">
-                        Join the community &rarr;
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. Platform Metrics (Integrated Seamlessly with Overlap & Glassmorphic Elevation) */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 -mt-16 sm:-mt-20 relative z-20">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {stats.map(stat => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={stat.label}
-                className="group relative overflow-hidden rounded-2xl bg-white/95 p-6 border border-slate-200/80 shadow-xl shadow-slate-200/40 backdrop-blur-md hover:border-blue-300 hover:shadow-2xl transition-all duration-300"
+            <div className="flex flex-wrap items-center gap-3 pt-3">
+              <Link
+                to="/blog"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md text-xs sm:text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:bg-brand-800 shadow-xs transition-colors"
               >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-50 to-indigo-50 border border-blue-100 text-blue-600 shadow-inner group-hover:scale-105 transition-transform duration-200">
-                    <Icon size={24} />
-                  </div>
-                  <div>
-                    <p className="text-3xl font-extrabold text-slate-900 tracking-tight">{stat.value}</p>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mt-0.5">{stat.label}</p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+                Explore Articles <ArrowRight size={14} />
+              </Link>
 
-      {/* 3. Unauthenticated Visitor Spotlight */}
-      {!currentUser && (
-        <section className="mx-auto max-w-6xl px-4 sm:px-6 relative z-10">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 border border-slate-800 p-8 sm:p-12 text-white shadow-2xl">
-            {/* Ambient glows */}
-            <div className="absolute top-0 right-0 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none" />
-            
-            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
-              <div className="space-y-4 text-center lg:text-left max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-300 text-xs font-semibold tracking-wide backdrop-blur-sm">
-                  <Sparkles size={14} className="text-blue-400 animate-pulse" />
-                  <span>Early Author Spotlight</span>
-                </div>
-                
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-snug">
-                  Claim your voice.{' '}
-                  <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent">
-                    Share your expertise on bloggerMe.
-                  </span>
-                </h3>
-                
-                <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-                  Join a high-performance publishing space tailored for tech minds. Write in clean Markdown, enjoy zero bloat, build your readership, and showcase your engineering craft.
-                </p>
-
-                {/* Micro-perks */}
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 pt-3 text-xs sm:text-sm text-slate-300 font-medium">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-emerald-400 flex-shrink-0" />
-                    <span>Instant publishing</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-emerald-400 flex-shrink-0" />
-                    <span>Markdown support</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 size={16} className="text-emerald-400 flex-shrink-0" />
-                    <span>SEO-ready articles</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex flex-col sm:flex-row items-center gap-3.5 flex-shrink-0 w-full sm:w-auto justify-center">
+              {!currentUser && (
                 <Link
                   to="/register"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-xs sm:text-sm font-medium text-brand-700 bg-white border border-brand-200 hover:bg-brand-50 hover:border-brand-300 transition-colors shadow-2xs"
                 >
-                  <PenSquare size={17} /> Start Writing Today
+                  <PenSquare size={14} className="text-brand-600" /> Start Writing
                 </Link>
-                <Link
-                  to="/login"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl font-medium text-white bg-white/10 hover:bg-white/15 border border-white/20 backdrop-blur-md active:scale-[0.98] transition-all"
-                >
-                  Sign in
-                </Link>
-              </div>
+              )}
             </div>
           </div>
-        </section>
-      )}
 
-      {/* 4. Featured Post */}
+          {/* Understated Editorial Publication Metrics Bar */}
+          <div className="mt-12 pt-6 border-t border-editorial-border grid grid-cols-3 max-w-lg gap-6 text-left">
+            <div>
+              <p className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">{stats[0].value}</p>
+              <p className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold mt-0.5">Articles</p>
+            </div>
+            <div>
+              <p className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">{stats[1].value}</p>
+              <p className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold mt-0.5">Authors</p>
+            </div>
+            <div>
+              <p className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">{stats[2].value}</p>
+              <p className="text-[11px] uppercase tracking-wider text-brand-700 font-semibold mt-0.5">Discussions</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Featured Article Showcase */}
       {featured && (
         <section className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-blue-600 uppercase tracking-widest mb-1">
-                <span>Curated Story</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Featured Article</h2>
+          <div className="flex items-center justify-between pb-3 mb-6 border-b border-editorial-border">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-brand-600" />
+              <h2 className="text-xs font-mono uppercase tracking-widest text-brand-700 font-bold">
+                Featured Story
+              </h2>
             </div>
-            <Link to="/blog" className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 transition-colors">
-              View all articles <ArrowRight size={16} />
+            <Link to="/blog" className="text-xs font-medium text-brand-600 hover:text-brand-800 flex items-center gap-1 transition-colors">
+              All articles &rarr;
             </Link>
           </div>
 
-          <div className="overflow-hidden rounded-3xl bg-white border border-slate-200/80 shadow-lg hover:shadow-xl transition-all duration-300 md:flex group">
-            <div className="md:w-1/2 aspect-[16/9] md:aspect-auto overflow-hidden bg-slate-100 relative">
-              <img
-                src={featured.coverImage}
-                alt={featured.title}
-                className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent md:hidden" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white border border-editorial-border rounded-md p-6 sm:p-8 hover:border-brand-300 transition-colors shadow-2xs">
+            <div className="lg:col-span-7 aspect-[16/10] overflow-hidden rounded bg-neutral-100 border border-neutral-100">
+              <Link to={`/posts/${featured.slug}`} className="block h-full w-full overflow-hidden">
+                <img
+                  src={featured.coverImage}
+                  alt={featured.title}
+                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
+                />
+              </Link>
             </div>
 
-            <div className="p-7 sm:p-10 flex flex-col justify-center md:w-1/2">
-              <div className="flex flex-wrap gap-2 mb-4">
-                {featured.tags.map(tag => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center rounded-full bg-blue-50 border border-blue-200/60 px-3 py-1 text-xs font-semibold text-blue-700"
-                  >
-                    #{tag}
+            <div className="lg:col-span-5 flex flex-col justify-center space-y-4">
+              <div className="flex items-center gap-2">
+                {featured.tags[0] && (
+                  <span className="text-xs font-mono uppercase tracking-wider text-brand-700 bg-brand-50 border border-brand-200/80 px-2 py-0.5 rounded font-semibold">
+                    {featured.tags[0]}
                   </span>
-                ))}
+                )}
+                <span className="text-neutral-300">·</span>
+                <span className="text-xs text-neutral-500">
+                  {new Date(featured.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight mb-4 group-hover:text-blue-600 transition-colors">
-                {featured.title}
-              </h3>
+              <Link to={`/posts/${featured.slug}`} className="group">
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950 leading-snug group-hover:text-brand-600 transition-colors">
+                  {featured.title}
+                </h3>
+              </Link>
 
-              <p className="text-slate-600 leading-relaxed text-sm sm:text-base mb-6 line-clamp-3">
+              <p className="text-sm text-neutral-600 leading-relaxed line-clamp-3">
                 {featured.excerpt}
               </p>
 
-              <div className="flex items-center justify-between pt-6 border-t border-slate-100">
+              <div className="flex items-center justify-between pt-4 border-t border-neutral-100">
                 <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full ring-2 ring-blue-100 overflow-hidden bg-slate-100 flex items-center justify-center font-bold text-xs text-blue-600">
+                  <div className="h-8 w-8 rounded-full overflow-hidden bg-brand-50 border border-brand-100 flex items-center justify-center font-medium text-xs text-brand-700">
                     {featured.authorAvatar ? (
                       <img src={featured.authorAvatar} alt={featured.authorName} className="h-full w-full object-cover" />
                     ) : (
-                      featured.authorName?.[0]?.toUpperCase() || 'U'
+                      featured.authorName?.[0]?.toUpperCase() || 'A'
                     )}
                   </div>
                   <div>
-                    <span className="block text-xs font-bold text-slate-800">{featured.authorName}</span>
-                    <span className="block text-[11px] text-slate-400">
-                      {new Date(featured.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </span>
+                    <span className="block text-xs font-semibold text-neutral-900">{featured.authorName}</span>
+                    <span className="block text-[11px] text-neutral-400">Contributor</span>
                   </div>
                 </div>
 
                 <Link
                   to={`/posts/${featured.slug}`}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors"
+                  className="text-xs font-semibold text-brand-600 hover:text-brand-800 flex items-center gap-1 transition-colors"
                 >
-                  Read story <ArrowRight size={14} />
+                  Read piece &rarr;
                 </Link>
               </div>
             </div>
@@ -342,18 +198,15 @@ export function HomePage() {
         </section>
       )}
 
-      {/* 5. Trending Articles Grid */}
+      {/* 3. Trending Articles Section */}
       {recent.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-blue-600 uppercase tracking-widest mb-1">
-                <span>From The Community</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Trending Articles</h2>
-            </div>
-            <Link to="/blog" className="text-sm font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 transition-colors">
-              Explore library <ArrowRight size={16} />
+          <div className="flex items-center justify-between pb-3 mb-6 border-b border-editorial-border">
+            <h2 className="text-xs font-mono uppercase tracking-widest text-neutral-600 font-bold">
+              Trending Articles
+            </h2>
+            <Link to="/blog" className="text-xs font-medium text-brand-600 hover:text-brand-800 flex items-center gap-1 transition-colors">
+              Explore library &rarr;
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -362,88 +215,62 @@ export function HomePage() {
         </section>
       )}
 
-      {/* 6. Topics & Categories Discovery */}
+      {/* 4. Explore Topics / Categories with Subtle Color Identities */}
+      <section className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="border-t border-b border-editorial-border py-8 bg-paper-50/50 rounded-sm px-4 sm:px-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-xs font-mono uppercase tracking-widest text-brand-700 font-bold">
+                Explore by Topic
+              </h3>
+              <p className="text-xs text-neutral-500 mt-1">
+                Filter articles by technical field and engineering discipline.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {['Frontend', 'Backend', 'Architecture', 'TypeScript', 'DevOps', 'Career'].map((topic) => {
+                const colors = categoryTokens[topic] || { bg: 'bg-brand-50', text: 'text-brand-700', border: 'border-brand-200' };
+                return (
+                  <Link
+                    key={topic}
+                    to={`/blog?tag=${topic.toLowerCase()}`}
+                    className={`px-3 py-1.5 text-xs font-medium rounded border ${colors.bg} ${colors.text} ${colors.border} hover:opacity-85 transition-opacity`}
+                  >
+                    #{topic}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Minimal Community Invitation / CTA with Subtle Tinted Surface */}
       {!currentUser && (
         <section className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">Domains of Expertise</span>
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mt-1">Explore by Category</h2>
-            <p className="text-slate-500 mt-2 text-sm sm:text-base">Discover comprehensive writeups, architecture breakdowns, and tech tutorials.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              { title: 'Frontend & UI', desc: 'React 18, Tailwind, Accessibility, State', icon: BookOpen, color: 'text-blue-600 bg-blue-50' },
-              { title: 'Backend & Cloud', desc: 'Node.js, Express, MongoDB, Microservices', icon: TrendingUp, color: 'text-indigo-600 bg-indigo-50' },
-              { title: 'DevOps & CI/CD', desc: 'Docker, GitHub Actions, AWS, Observability', icon: Compass, color: 'text-cyan-600 bg-cyan-50' },
-              { title: 'Engineering Craft', desc: 'System Design, Team Culture, Clean Code', icon: Users, color: 'text-purple-600 bg-purple-50' },
-            ].map((cat) => {
-              const Icon = cat.icon;
-              return (
-                <div
-                  key={cat.title}
-                  className="rounded-2xl bg-white border border-slate-200/80 p-6 text-center hover:border-blue-300 hover:shadow-xl transition-all duration-300 group"
-                >
-                  <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${cat.color} mx-auto mb-4 group-hover:scale-110 transition-transform duration-200`}>
-                    <Icon size={24} />
-                  </div>
-                  <h4 className="font-bold text-slate-900 text-base">{cat.title}</h4>
-                  <p className="text-xs text-slate-500 mt-2 leading-relaxed">{cat.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* 7. Bottom CTA */}
-      {!currentUser && (
-        <section className="mx-4 sm:mx-6 max-w-6xl lg:mx-auto">
-          <div className="relative overflow-hidden rounded-3xl bg-slate-950 border border-slate-800 text-white shadow-2xl">
-            {/* Ambient glows & radial mesh */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(59,130,246,0.2),rgba(255,255,255,0))]" />
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-blue-600/20 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-indigo-600/20 blur-3xl pointer-events-none" />
-            
-            {/* Grid overlay */}
-            <div 
-              className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-              style={{ 
-                backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-                backgroundSize: '28px 28px'
-              }} 
-            />
-
-            <div className="relative z-10 px-6 py-16 sm:py-20 text-center max-w-2xl mx-auto">
-              <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-blue-500/10 border border-blue-400/30 text-blue-400 mb-6 shadow-inner">
-                <TrendingUp size={24} />
-              </div>
-
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-4">
-                Join our community of{' '}
-                <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent">
-                  writers & readers
-                </span>
-              </h2>
-
-              <p className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed mb-8 max-w-xl mx-auto">
-                Share your engineering knowledge, publish technical guides, grow your readership, and join discussions with passionate developers worldwide.
-              </p>
-
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link
-                  to="/register"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 active:scale-[0.98] transition-all"
-                >
-                  <PenSquare size={17} /> Create an account
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl font-medium text-white bg-white/10 hover:bg-white/15 border border-white/20 backdrop-blur-md hover:border-white/30 active:scale-[0.98] transition-all"
-                >
-                  Sign in
-                </Link>
-              </div>
+          <div className="bg-brand-50/40 border border-brand-200/80 rounded-md p-8 sm:p-10 text-center max-w-2xl mx-auto shadow-2xs">
+            <span className="inline-block text-[11px] font-mono uppercase tracking-widest text-brand-700 font-semibold mb-2 bg-brand-100/70 border border-brand-200 px-2 py-0.5 rounded">
+              Contribute
+            </span>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-950 tracking-tight mb-2">
+              Write something worth sharing.
+            </h2>
+            <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed mb-6 max-w-md mx-auto">
+              Have an engineering story, architectural lesson, or technical idea? Publish directly to a thoughtful developer audience on bloggerMe.
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <Link
+                to="/register"
+                className="px-5 py-2.5 text-xs sm:text-sm font-semibold text-white bg-brand-600 rounded-md hover:bg-brand-700 active:bg-brand-800 shadow-xs transition-colors"
+              >
+                Start Writing
+              </Link>
+              <Link
+                to="/login"
+                className="px-4 py-2.5 text-xs sm:text-sm font-medium text-neutral-700 bg-white border border-neutral-300 rounded-md hover:bg-neutral-50 hover:border-brand-300 transition-colors"
+              >
+                Sign In
+              </Link>
             </div>
           </div>
         </section>

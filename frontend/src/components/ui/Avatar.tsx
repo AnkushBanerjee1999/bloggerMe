@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { User } from 'lucide-react';
 
 interface AvatarProps {
   src?: string | null;
@@ -9,15 +10,18 @@ interface AvatarProps {
 
 export function Avatar({ src, alt, size = 'md', className = '' }: AvatarProps) {
   const [error, setError] = useState(false);
-  const sizes = { sm: 'h-8 w-8 text-xs', md: 'h-10 w-10 text-sm', lg: 'h-14 w-14 text-lg' };
 
-  // Calculate clean initials from alt name
-  const initials = (alt || 'User')
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map(p => p[0]?.toUpperCase())
-    .join('') || 'U';
+  const containerSizes = {
+    sm: 'h-8 w-8',
+    md: 'h-10 w-10',
+    lg: 'h-14 w-14',
+  };
+
+  const iconSizes = {
+    sm: 16,
+    md: 20,
+    lg: 28,
+  };
 
   const hasValidImage = Boolean(src && src.trim() && !error);
 
@@ -27,17 +31,19 @@ export function Avatar({ src, alt, size = 'md', className = '' }: AvatarProps) {
         src={src!}
         alt={alt}
         onError={() => setError(true)}
-        className={`${sizes[size]} rounded-full object-cover ring-2 ring-white shadow-sm flex-shrink-0 ${className}`}
+        className={`${containerSizes[size]} rounded-full object-cover ring-1 ring-editorial-border shadow-2xs flex-shrink-0 ${className}`}
       />
     );
   }
 
   return (
     <div
-      className={`${sizes[size]} rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-semibold flex items-center justify-center ring-2 ring-white shadow-sm flex-shrink-0 select-none ${className}`}
-      title={alt}
+      className={`${containerSizes[size]} rounded-full bg-brand-50 border border-brand-200 text-brand-600 flex items-center justify-center flex-shrink-0 select-none shadow-2xs ${className}`}
+      title={alt || 'User'}
+      aria-label={alt || 'User'}
     >
-      {initials}
+      <User size={iconSizes[size]} className="text-brand-600" />
     </div>
   );
 }
+

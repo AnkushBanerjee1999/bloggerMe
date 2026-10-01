@@ -66,20 +66,21 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-paper-100 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <Link to="/" className="flex items-center justify-center gap-2 font-bold text-lg text-gray-900 mb-8">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white font-semibold">b</span>
-          bloggerMe
+        <Link to="/" className="flex items-center justify-center gap-2 mb-8 group">
+          <span className="font-serif font-bold text-2xl tracking-tight text-neutral-900 group-hover:text-brand-600 transition-colors">
+            blogger<span className="font-sans font-semibold text-brand-600 text-lg">Me</span>
+          </span>
         </Link>
 
-        <Card className="p-6 sm:p-8">
-          <h1 className="text-2xl font-bold text-gray-900 text-center mb-1">Welcome back</h1>
-          <p className="text-sm text-gray-500 text-center mb-6">Sign in to your account to continue</p>
+        <div className="bg-white border border-editorial-border rounded-md p-6 sm:p-8 shadow-2xs">
+          <h1 className="font-serif text-2xl font-bold text-neutral-900 text-center mb-1">Welcome back</h1>
+          <p className="text-xs text-neutral-500 text-center mb-6">Sign in to your account to continue</p>
 
           {error && (
-            <div className="flex items-start gap-2 bg-red-50 text-red-700 text-sm rounded-lg p-3 mb-4">
-              <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 bg-error-50 text-error-700 text-sm rounded-md p-3 mb-4 border border-error-100">
+              <AlertCircle size={18} className="flex-shrink-0 mt-0.5 text-error-600" />
               <span>{error}</span>
             </div>
           )}
@@ -164,10 +165,10 @@ export function LoginPage() {
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>
           </form>
-        </Card>
+        </div>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
-          Don't have an account? <Link to="/register" className="text-blue-600 font-medium hover:text-blue-700">Sign up</Link>
+        <p className="text-center text-xs text-neutral-500 mt-6">
+          Don't have an account? <Link to="/register" className="text-brand-600 font-semibold hover:text-brand-700 hover:underline">Sign up</Link>
         </p>
       </div>
     </div>
