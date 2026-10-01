@@ -602,6 +602,3 @@ A walkthrough of the application can cover:
 
 ---
 
-## 21. License
-
-No license has been specified for this project. All rights are reserved by the repository owner.
