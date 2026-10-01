@@ -163,7 +163,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
         });
       } else if (currentUser?.role === 'admin') {
         const data = await api.get('/admin/comments?limit=100');
-        setComments(data?.items || []);
+        const rawItems = data?.items || [];
+        // Normalize raw Mongoose populated docs to frontend Comment type
+        const normalized = rawItems.map((item: any) => ({
+          id: item.id || item._id,
+          content: item.content,
+          postId: typeof item.post === 'object' ? (item.post?._id || '') : (item.postId || item.post || ''),
+          postTitle: item.post?.title || '',
+          authorId: typeof item.author === 'object' ? (item.author?._id || '') : (item.authorId || item.author || ''),
+          authorName: item.author?.name || item.authorName || 'Unknown',
+          authorAvatar: item.author?.avatar || item.authorAvatar || '',
+          status: item.status || 'visible',
+          createdAt: item.createdAt,
+        }));
+        setComments(normalized);
       }
     } catch (err: any) {
       console.warn('Could not load comments from API:', err.message);
@@ -223,6 +236,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     refreshPosts();
   }, [refreshPosts]);
+
+  // Load admin data (users + comments) when user is admin
+  useEffect(() => {
+    if (currentUser?.role === 'admin') {
+      refreshUsers();
+      refreshComments();
+    }
+  }, [currentUser?.role, refreshUsers, refreshComments]);
 
   // Socket.io Real-time connection & notification listener
   useEffect(() => {

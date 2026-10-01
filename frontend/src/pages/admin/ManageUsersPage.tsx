@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Users, Search, Ban, CheckCircle, Trash2, Shield, ShieldCheck, ShieldAlert } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { Card } from '@/components/ui/Card';
@@ -12,12 +12,17 @@ import { formatDate } from '@/utils/format';
 import type { User } from '@/types';
 
 export function ManageUsersPage() {
-  const { users, posts, comments, banUser, unbanUser, deleteUser, updateUserRole, showToast, currentUser } = useApp();
+  const { users, posts, comments, banUser, unbanUser, deleteUser, updateUserRole, showToast, currentUser, refreshUsers } = useApp();
   const [search, setSearch] = useState('');
   const [banTarget, setBanTarget] = useState<User | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
   const [roleTarget, setRoleTarget] = useState<{ user: User; nextRole: 'user' | 'admin' } | null>(null);
   const [roleLoading, setRoleLoading] = useState(false);
+
+  // Fetch users when this page mounts (only if not already loaded)
+  useEffect(() => {
+    if (users.length === 0) refreshUsers();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = users.filter(u =>
     u.name.toLowerCase().includes(search.toLowerCase()) ||

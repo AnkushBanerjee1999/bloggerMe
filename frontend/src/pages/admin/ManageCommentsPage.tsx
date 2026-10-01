@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Search, Trash2, EyeOff, Eye } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -13,10 +13,15 @@ import { formatRelative, truncate } from '@/utils/format';
 import type { Comment } from '@/types';
 
 export function ManageCommentsPage() {
-  const { comments, posts, deleteComment, hideComment, unhideComment, showToast } = useApp();
+  const { comments, posts, deleteComment, hideComment, unhideComment, showToast, refreshComments } = useApp();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'visible' | 'hidden'>('all');
   const [deleteTarget, setDeleteTarget] = useState<Comment | null>(null);
+
+  // Fetch comments when this page mounts (only if not already loaded)
+  useEffect(() => {
+    if (comments.length === 0) refreshComments();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = comments.filter(c => {
     const matchesSearch = c.content.toLowerCase().includes(search.toLowerCase()) || c.authorName.toLowerCase().includes(search.toLowerCase());
