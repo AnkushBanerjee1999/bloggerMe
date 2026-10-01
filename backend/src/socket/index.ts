@@ -8,7 +8,7 @@ import { setSocketIO, emitToUser } from './notificationEmitter.js';
 export function initSocketIO(httpServer: HTTPServer): SocketIOServer {
   const io = new SocketIOServer(httpServer, {
     cors: {
-      origin: config.clientUrl,
+      origin: config.isProduction ? config.clientUrl : true,
       credentials: true,
       methods: ['GET', 'POST'],
     },

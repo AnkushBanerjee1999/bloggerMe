@@ -16,7 +16,7 @@ export function createApp(): express.Application {
   app.use(helmet());
   app.use(
     cors({
-      origin: config.clientUrl,
+      origin: config.isProduction ? config.clientUrl : true,
       credentials: true,
     }),
   );
